@@ -11,6 +11,49 @@ document.addEventListener("DOMContentLoaded", function () {
     stopButton.style.display = "none"; // Hide initially
     document.querySelector(".input-container").appendChild(stopButton);
 
+    // Apply styles dynamically
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .stop-button {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 8px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, #ff4e50, #ff9a8b);
+        box-shadow: 0 4px 10px rgba(255, 78, 80, 0.3);
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        position: relative;
+      }
+
+      .stop-button i {
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .stop-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 14px rgba(255, 78, 80, 0.5);
+      }
+
+      .stop-button.spinning i {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+
     function sendMessage() {
         const message = userInput.value.trim();
         if (message === "") return;
@@ -36,85 +79,80 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchBotResponse(message, botMessageDiv);
     }
 
-    let abortController; // Declare abort controller globally
+    let abortController;
 
-function fetchBotResponse(message, botMessageDiv) {
-    // Abort any ongoing fetch request before starting a new one
-    if (abortController) {
-        abortController.abort();
+    function fetchBotResponse(message, botMessageDiv) {
+        if (abortController) {
+            abortController.abort();
+        }
+        abortController = new AbortController();
+
+        fetch("/get?msg=" + encodeURIComponent(message), { signal: abortController.signal })
+            .then(response => response.text())
+            .then(data => {
+                botMessageDiv.innerHTML = '<i class=""></i> ';
+                typeEffect(botMessageDiv, formatResponse(data));
+            })
+            .catch(error => {
+                if (error.name === "AbortError") {
+                    botMessageDiv.innerHTML = '<i class=""></i> ⚠️ Response stopped.';
+                } else {
+                    botMessageDiv.innerHTML = '<i class=""></i> ⚠️ Error: Unable to fetch response.';
+                    console.error("Fetch error:", error);
+                }
+            });
     }
-    abortController = new AbortController(); // Create a new AbortController
-
-    fetch("/get?msg=" + encodeURIComponent(message), { signal: abortController.signal })
-        .then(response => response.text())
-        .then(data => {
-            botMessageDiv.innerHTML = '<i class=""></i> ';
-            typeEffect(botMessageDiv, formatResponse(data));
-        })
-        .catch(error => {
-            if (error.name === "AbortError") {
-                botMessageDiv.innerHTML = '<i class=""></i> ⚠️ Response stopped.';
-            } else {
-                botMessageDiv.innerHTML = '<i class=""></i> ⚠️ Error: Unable to fetch response.';
-                console.error("Fetch error:", error);
-            }
-        });
-}
-
 
     let currentBotMessage = null;
     let fullResponseText = "";
 
     function typeEffect(element, text, index = 0) {
         if (index === 0) {
-            currentBotMessage = element; // Store the message element
-            fullResponseText = text; // Store full response
+            currentBotMessage = element;
+            fullResponseText = text;
         }
 
         if (index < text.length) {
             element.innerHTML += text.charAt(index);
             typingTimeout = setTimeout(() => typeEffect(element, text, index + 1), 30);
         } else {
-            stopButton.style.display = "none"; // Hide stop button after completion
+            stopButton.style.display = "none";
             currentBotMessage = null;
             fullResponseText = "";
         }
     }
 
-
     function stopResponse() {
-        clearTimeout(typingTimeout); // Stop the typing effect
+        clearTimeout(typingTimeout);
         if (abortController) {
-            abortController.abort(); // Cancel the fetch request
+            abortController.abort();
         }
         stopButton.style.display = "none";
     }
-    
-    
 
     function appendMessage(type, text, align) {
         const messageContainer = document.createElement("div");
         messageContainer.classList.add("message-container", align);
-    
+
         const iconDiv = document.createElement("div");
         iconDiv.classList.add("icon");
-        iconDiv.innerHTML = type === "user" ? '<i class=""></i>' : '<i class="fas fa-robot"></i>';
-    
+        iconDiv.innerHTML = type === "user" ? '<i class=""></i>' : '<i class="fa-sharp fa-solid fa-s"></i>';
+
         const messageDiv = document.createElement("div");
         messageDiv.classList.add("message", type);
         messageDiv.innerHTML = text;
-    
+
         messageContainer.appendChild(iconDiv);
         messageContainer.appendChild(messageDiv);
         
         chatBox.appendChild(messageContainer);
-    
+
         gsap.fromTo(messageContainer, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
-    
+
         setTimeout(() => {
             chatBox.scrollTop = chatBox.scrollHeight;
         }, 100);
-    
+
         return messageDiv;
     }
 
