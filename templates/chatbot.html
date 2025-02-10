@@ -108,16 +108,16 @@
                     <nav id="nav-main">
                         <ul>
                             <li>
-                                <a href="index.html">Home</a>
+                                <a href="{{ url_for('index') }}">Home</a>
                             </li>
                             <li>
-                                <a href="#about">About</a>
+                                <a href="{{ url_for('index') }}#about">About</a>
                             </li>
                             <li>
-                                <a href="#gallery">Gallery</a>
+                                <a href="{{ url_for('index') }}#gallery">Gallery</a>
                             </li>
                             <li>
-                                <a href="#services">Services</a>
+                                <a href="{{ url_for('index') }}#services">Services</a>
                             </li>
                             <li>
                                 <a href="#testimonials">Testimonials</a>
@@ -162,7 +162,7 @@
                         <button class="send-button" onclick="sendMessage()" title="Send Message">
                             <i class="fas fa-paper-plane"></i>
                         </button>
-                    </div>
+                    </div>                    
                 </div>
             </div>  
         </section>
