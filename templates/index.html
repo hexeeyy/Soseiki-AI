@@ -291,15 +291,13 @@
                 <div class="col-3 wow fadeIn" data-wow-delay="0.7s">
                     <div class="section-heading">
                         <h3>BRAINSTORM</h3>
-                        <h2 class="section-title">AI-Powered Academic Assistance</h2>
-                        <p class="section-subtitle">📖 Get clear, well-structured answers to your questions
-                            📌 Personalized study recommendations based on your queries</p>
+                        <h2 class="section-title">創世記</h2>
+                        <p class="section-subtitle"> Get clear, well-structured answers to your questions. Personalized study recommendations based on your queries</p>
                     </div>
-                    <p>Language should never be a barrier to knowledge! Sōseiki.AI provides real-time translations, grammar corrections, and explanations in multiple languages.
-                        Whether you're a beginner or an advanced programmer.
+                    <p>Language should never be a barrier to knowledge! Sōseiki.AI provides real-time translations, grammar corrections, and explanations in multiple languages.</p>    
                     <p>
                         Complex data is easier to understand with visuals. Sōseiki.AI can generate graphs, charts, and visual analytics based on numerical data, equations, or research inputs.
-                        Need inspiration for a school project, presentation, or debate? 
+                     
                     </p>
                     <!-- Just replace the Video ID "UYJ5IjBRlW8" with the ID of your video on YouTube (Found within the URL) -->
                     <a href="#" data-videoid="5NgNicANyqM" data-videosite="youtube" class="button video link-lightbox">
@@ -321,42 +319,80 @@
         <!--Testimonials-->
         <aside id="testimonials" class="scrollto text-center" data-enllax-ratio=".2">
 
-            <div class="row clearfix">
-
-                <div class="section-heading">
-                    <h3>FEEDBACK</h3>
-                    <h2 class="section-title">What our customers are saying</h2>
+            <div class="containerx">
+                <h2>Choose an Action: Paraphrase, Summarize, or Grammar Check!</h2>
+            
+                <!-- Navbar for selecting action -->
+                <div class="navbar">
+                    <button class="nav-btn active" onclick="setAction('paraphrase', this)">PARAPHRASE</button>
+                    <button class="nav-btn" onclick="setAction('summarize', this)">SUMMARIZE</button>
+                    <button class="nav-btn" onclick="setAction('grammar', this)">GRAMMAR CHECK</button>
                 </div>
+            
+                <div class="paraphraser-box">
+                    <div class="left-box">
+                        <textarea id="user-input" placeholder="Enter text here..."></textarea>
+                    
+                        <!-- Paraphrasing style dropdown -->
+                        <select id="paraphrase-style">
+                            <option value="standard">STANDARD</option>
+                            <option value="fluency">FLUENCY</option>
+                            <option value="formal">FORMAL</option>
+                        </select>
+                    
+                        <button id="action-btn" onclick="sendMessage()">SUBMIT</button>
+                    </div>
 
-                <!--User Testimonial-->
-                <blockquote class="col-3 testimonial classic">
-                    <img src="/static/images/user-images/user-1.jpg" alt="User"/>
-                    <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua</q>
-                    <footer>John Doe - Happy Customer</footer>
-                </blockquote>
-                <!-- End of Testimonial-->
+                    <div class="right-box">
+                        <textarea id="output" placeholder="Processed text will appear here..." readonly></textarea>
+                    </div>
+                </div>
+            </div>
+    </div>
 
-                <!--User Testimonial-->
-                <blockquote class="col-3 testimonial classic">
-                    <img src="/static/images/user-images/user-2.jpg" alt="User"/>
-                    <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua</q>
-                    <footer>Roslyn Doe - Happy Customer</footer>
-                </blockquote>
-                <!-- End of Testimonial-->
+    <script>
+        let selectedAction = "paraphrase"; // Default action
 
-                <!--User Testimonial-->
-                <blockquote class="col-3 testimonial classic">
-                    <img src="/static/images/user-images/user-3.jpg" alt="User"/>
-                    <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua</q>
-                    <footer>Thomas Doe - Happy Customer</footer>
-                </blockquote>
-                <!-- End of Testimonial-->
+        function setAction(action, element) {
+            selectedAction = action;
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            
+            // Show paraphrasing style dropdown only for paraphrasing
+            const styleDropdown = document.getElementById("paraphrase-style");
+            if (action === "paraphrase") {
+                styleDropdown.style.display = "block";
+            } else {
+                styleDropdown.style.display = "none";
+            }
+        }
+
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input").value.trim();
+            const outputBox = document.getElementById("output");
+            const paraphraseStyle = document.getElementById("paraphrase-style").value;
+
+            if (!userInput) {
+                alert("Please enter some text!");
+                return;
+            }
+
+            outputBox.value = "Processing...";
+
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: userInput, action: selectedAction, style: paraphraseStyle })
+                });
+
+                const data = await response.json();
+                outputBox.value = data.result || "Error processing request.";
+            } catch (error) {
+                outputBox.value = "An error occurred. Please try again!";
+            }
+        }
+    </script>
 
             </div>
 

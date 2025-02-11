@@ -2616,6 +2616,170 @@ sub {
     word-wrap: break-word;
 }
 
+/* AI WRITING */
+
+.containerx {
+    display: inline-block;
+    align-items: center;
+    max-width: 800%;
+    margin: 50px auto;
+    background: transparent;
+    padding: 25px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.nav-btn {
+    font-family: 'Open Sans', sans-serif, Arial, Helvetica;
+    font-size:16px;
+    color:#000000;
+    text-decoration: none;
+    border: 3px solid #000000;
+    background-color: #ffffff;
+    padding: 12px;
+    height: auto;
+    width: 200px;
+    font-weight: bold;
+    margin: 0 30px;
+}
+
+/* Button Color */
+
+.nav-btn {
+    border-color:#111;
+}
+
+/* Button Hover Color */
+
+.nav-btn:hover {
+    color:#d2b356;
+    border-color:#d2b356;
+    transition: all 0.5s ease-in-out;
+}
+
+.nav-btn.active {
+    background-color: #d0b557;
+    color: #000000;
+    border-color: #000000;
+}
+
+.nav-btn.active:hover {
+    background-color: #ffffff;
+    color: #d2b356;
+    border-color: #d2b356;
+}
+
+/* Paraphraser Box */
+.paraphraser-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.left-box, .right-box {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 1000cm; /* Make it bigger */
+    height: 400px; /* Increase height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+}
 
 
+textarea {
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    font-size: 14px;
+    border: 3px solid #000000;
+    resize: none;
+}
 
+/* I want the dropdown to be edited, edit the border of the dropdown menu */
+select {
+    margin-top: 10px;
+    font-weight: bold;
+    width: 150px;
+    padding: 10px;
+    border: 3px solid #000000; /* Original border */
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s; /* Added border-color transition */
+    appearance: none; /* Remove default arrow */
+    text-align: center;
+}
+
+select:hover {
+    background: #ffffff;
+    border-color: #d2b356; /* Change border color on hover */
+    font-weight: bold;
+    color: #d2b356;
+}
+
+select:focus {
+    background: #ffffff;
+    border-color: #d2b356; /* Change border color on focus */
+    font-weight: bold;
+    color: #d2b356;
+}
+
+
+/* Submit Button */
+#action-btn {
+    font-weight: bold;
+    justify-content: center;
+    display: flex;
+    width: 150px;
+    margin-top: 10px;
+    border: none;
+    background-color: #ffffff;
+    border: 3px solid #000000;
+    color: #000000;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#action-btn:hover {
+    background-color: #ffffff;
+    color: #d2b356;
+    border-color: #d2b356;
+}
+
+@media (max-width: 600px) { /* Adjust based on your preference */
+    .navbar {
+        flex-direction: column; /* Switch to vertical layout */
+        align-items: center;
+        padding: 10px;
+    }
+
+    .nav-btn {
+        width: 100%; /* Make buttons full-width in vertical layout */
+        text-align: center;
+    }
+}
+
+/* Responsive Design */
+@media (min-width: 400px) {
+    .paraphraser-box {
+        flex-direction: row;
+    }
+
+    .left-box, .right-box {
+        width: 48%;
+    }
+}

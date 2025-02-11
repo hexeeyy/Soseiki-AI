@@ -158,16 +158,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function formatResponse(response) {
         return response
-            .replace(/\*/g, '')
-            .replace(/(\bIMPORTANT\b)/g, '<span class="bold">$1</span>')
-            .replace(/(\d+)\^(\d+)/g, (match, base, exp) => `${base}<sup>${exp}</sup>`)
-            .replace(/([a-zA-Z])_(\d+)/g, (match, letter, num) => `${letter}<sub>${num}</sub>`)
-            .replace(/\n{3,}/g, '\n\n')
-            .replace(/^\s*[-•]\s+(.*)$/gm, '• $1')
-            .replace(/--/g, '—')
-            .replace(/(\d+)-(\d+)/g, '$1–$2')
-            .replace(/[\u200B-\u200D\uFEFF]/g, '')
-            .replace(/\n/g, '\n\n');
+            .replace(/\*/g, '') // remove asterisks
+            .replace(/(?:\r\n|\r|\n)/g, '\n')
+            .replace(/(\bIMPORTANT\b)/g, '<span class="bold">$1</span>')    // bold
+            .replace(/(\d+)\^(\d+)/g, (_match, base, exp) => `${base}<sup>${exp}</sup>`) // superscript
+            .replace(/([a-zA-Z])_(\d+)/g, (_match, letter, num) => `${letter}<sub>${num}</sub>`) // subscript
+            .replace(/^\s*[-•]\s+(.*)$/gm, '• $1')  // bullet points
+            .replace(/--/g, '—')    // em dash
+            .replace(/(\d+)-(\d+)/g, '$1–$2')   // en dash
+            .replace(/[\u200B-\u200D\uFEFF]/g, ''); // zero-width space
     }
 
     setTimeout(() => {
